@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ __('auth.app_name') }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo/favicon.svg') }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=cairo:400,500,600,700|instrument-sans:400,500,600" rel="stylesheet" />
@@ -28,6 +29,10 @@
         </div>
 
         <div class="w-full max-w-md">
+            <div class="mb-6 flex justify-center">
+                <img src="{{ asset('images/logo/emblem.svg') }}" alt="{{ __('auth.app_name') }}" class="h-40 w-40">
+            </div>
+
             <div class="mb-8 flex justify-center">
                 <div class="inline-flex w-full max-w-xs items-center gap-1 rounded-full bg-white/10 p-1">
                     <a

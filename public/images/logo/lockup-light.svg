@@ -1,0 +1,28 @@
+<svg width="420" height="120" viewBox="0 0 420 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="badgeGrad2" x1="10" y1="10" x2="110" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#332a72"/>
+      <stop offset="52%" stop-color="#2b2361"/>
+      <stop offset="100%" stop-color="#1c1640"/>
+    </linearGradient>
+    <radialGradient id="hubGlow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F1EDFB"/>
+      <stop offset="100%" stop-color="#C9C0F2"/>
+    </radialGradient>
+  </defs>
+
+  <g transform="translate(10,10)">
+    <rect x="0" y="0" width="100" height="100" rx="24" fill="url(#badgeGrad2)"/>
+    <rect x="10" y="8" width="80" height="3" rx="1.5" fill="#8F7FD6" opacity="0.55"/>
+    <g>
+      <rect x="50" y="11" width="20" height="35" rx="8" fill="#8F7FD6" transform="rotate(0 50 50)"/>
+      <rect x="50" y="11" width="20" height="35" rx="8" fill="#6C5CB0" transform="rotate(90 50 50)"/>
+      <rect x="50" y="11" width="20" height="35" rx="8" fill="#4A3D8F" transform="rotate(180 50 50)"/>
+      <rect x="50" y="11" width="20" height="35" rx="8" fill="#352A70" transform="rotate(270 50 50)"/>
+    </g>
+    <circle cx="50" cy="50" r="7.5" fill="url(#hubGlow2)"/>
+  </g>
+
+  <text x="128" y="66" font-family="'Segoe UI', 'Poppins', system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="0.5" fill="#241C4D">ERP</text>
+  <text x="130" y="90" font-family="'Segoe UI', 'Poppins', system-ui, sans-serif" font-size="15" font-weight="600" letter-spacing="5" fill="#6C5CB0">SYSTEM</text>
+</svg>

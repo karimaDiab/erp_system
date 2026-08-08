@@ -1,0 +1,116 @@
+<svg width="340" height="340" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="340" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#332a72"/>
+      <stop offset="55%" stop-color="#2b2361"/>
+      <stop offset="100%" stop-color="#1a1438"/>
+    </linearGradient>
+    <radialGradient id="ambient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8F7FD6" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#8F7FD6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="centerHex" x1="102" y1="102" x2="218" y2="218" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6C5CB0"/>
+      <stop offset="100%" stop-color="#3a3080"/>
+    </linearGradient>
+    <filter id="blurSm" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="blurLg" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="340" height="340" rx="40" fill="url(#bg)"/>
+  <rect x="18" y="14" width="304" height="3" rx="1.5" fill="#8F7FD6" opacity="0.5"/>
+
+  <g transform="translate(10,10)">
+    <circle cx="160" cy="160" r="150" fill="url(#ambient)" filter="url(#blurLg)"/>
+
+    <!-- connector lines (drawn under the hexes so ends are hidden) -->
+    <g stroke="#B7ACE8" stroke-width="1.5" opacity="0.45">
+      <line x1="160" y1="160" x2="160" y2="42"/>
+      <line x1="160" y1="160" x2="262.2" y2="101"/>
+      <line x1="160" y1="160" x2="262.2" y2="219"/>
+      <line x1="160" y1="160" x2="160" y2="278"/>
+      <line x1="160" y1="160" x2="57.8" y2="219"/>
+      <line x1="160" y1="160" x2="57.8" y2="101"/>
+    </g>
+
+    <!-- outer hexagons -->
+    <g fill="#3a3080" fill-opacity="0.55" stroke="#B7ACE8" stroke-width="2">
+      <polygon points="160,2 194.6,22 194.6,62 160,82 125.4,62 125.4,22"/>
+      <polygon points="262.2,61 296.8,81 296.8,121 262.2,141 227.6,121 227.6,81"/>
+      <polygon points="262.2,179 296.8,199 296.8,239 262.2,259 227.6,239 227.6,199"/>
+      <polygon points="160,238 194.6,258 194.6,298 160,318 125.4,298 125.4,258"/>
+      <polygon points="57.8,179 92.4,199 92.4,239 57.8,259 23.2,239 23.2,199"/>
+      <polygon points="57.8,61 92.4,81 92.4,121 57.8,141 23.2,121 23.2,81"/>
+    </g>
+
+    <!-- icon: analytics (top) -->
+    <g stroke="#F1EDFB" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="145" y="44" width="7" height="12" fill="#F1EDFB" stroke="none"/>
+      <rect x="156" y="36" width="7" height="20" fill="#F1EDFB" stroke="none"/>
+      <rect x="167" y="27" width="7" height="29" fill="#F1EDFB" stroke="none"/>
+      <path d="M145,40 L156,32 L167,24 L173,20"/>
+      <circle cx="173" cy="20" r="3" fill="#F1EDFB" stroke="none"/>
+    </g>
+
+    <!-- icon: production gear (upper-right) -->
+    <g stroke="#F1EDFB" stroke-width="3" fill="none" stroke-linecap="round">
+      <circle cx="262.2" cy="101" r="11"/>
+      <g stroke-width="3.2">
+        <line x1="262.2" y1="86" x2="262.2" y2="80"/>
+        <line x1="262.2" y1="116" x2="262.2" y2="122"/>
+        <line x1="247.2" y1="101" x2="241.2" y2="101"/>
+        <line x1="277.2" y1="101" x2="283.2" y2="101"/>
+        <line x1="251.8" y1="90.6" x2="247.6" y2="86.4"/>
+        <line x1="272.6" y1="111.4" x2="276.8" y2="115.6"/>
+        <line x1="272.6" y1="90.6" x2="276.8" y2="86.4"/>
+        <line x1="251.8" y1="111.4" x2="247.6" y2="115.6"/>
+      </g>
+    </g>
+
+    <!-- icon: revenue (lower-right) -->
+    <g>
+      <path d="M262.2,202 A17,17 0 1 1 245.2,219" fill="none" stroke="#F1EDFB" stroke-width="2.6" stroke-linecap="round"/>
+      <polygon points="245.2,213 245.2,219 251.2,220" fill="#F1EDFB"/>
+      <text x="262.2" y="227" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#F1EDFB" text-anchor="middle">$</text>
+    </g>
+
+    <!-- icon: inventory bars (bottom) -->
+    <g fill="#F1EDFB">
+      <rect x="144" y="282" width="6.5" height="10"/>
+      <rect x="153.5" y="274" width="6.5" height="18"/>
+      <rect x="163" y="278" width="6.5" height="14"/>
+      <rect x="172.5" y="270" width="6.5" height="22"/>
+    </g>
+
+    <!-- icon: customers (lower-left) -->
+    <g fill="none" stroke="#F1EDFB" stroke-width="2.6" stroke-linecap="round">
+      <circle cx="49" cy="209" r="6" fill="#F1EDFB" stroke="none"/>
+      <path d="M38,232 A11,10 0 0 1 60,232"/>
+      <circle cx="67" cy="212" r="6" fill="#F1EDFB" stroke="none" opacity="0.75"/>
+      <path d="M57,233 A10,9 0 0 1 77,233" opacity="0.75"/>
+    </g>
+
+    <!-- icon: supply network (upper-left) -->
+    <g stroke="#F1EDFB" stroke-width="2" opacity="0.9">
+      <line x1="48" y1="112" x2="68" y2="112"/>
+      <line x1="48" y1="112" x2="58" y2="90"/>
+      <line x1="68" y1="112" x2="58" y2="90"/>
+    </g>
+    <g fill="#F1EDFB">
+      <circle cx="48" cy="112" r="4.5"/>
+      <circle cx="68" cy="112" r="4.5"/>
+      <circle cx="58" cy="90" r="4.5"/>
+    </g>
+
+    <!-- center hex -->
+    <polygon points="160,102 210.2,131 210.2,189 160,218 109.8,189 109.8,131"
+      fill="url(#centerHex)" stroke="#C9C0F2" stroke-width="2"/>
+    <rect x="118" y="149" width="84" height="22" rx="11" fill="#8F7FD6" opacity="0.4" filter="url(#blurSm)"/>
+    <text x="160" y="169" font-family="'Segoe UI', system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="1" fill="#FFFFFF" text-anchor="middle">ERP</text>
+    <text x="160" y="196" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="4" fill="#D8D0F5" text-anchor="middle">SYSTEM</text>
+  </g>
+</svg>
