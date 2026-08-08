@@ -6,7 +6,7 @@
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
     <div>
         <label class="mb-1.5 block text-sm font-medium text-gray-700">{{ __('app.field_supplier') }}</label>
-        <select name="supplier_id" required class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#3A306F] focus:ring-[#3A306F]">
+        <select name="supplier_id" required class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#2b2361] focus:ring-[#2b2361]">
             <option value="">—</option>
             @foreach ($suppliers as $supplier)
                 <option value="{{ $supplier->id }}" @selected(old('supplier_id', $order->supplier_id ?? null) == $supplier->id)>{{ $supplier->name }}</option>
@@ -18,13 +18,13 @@
     <div>
         <label class="mb-1.5 block text-sm font-medium text-gray-700">{{ __('app.field_order_date') }}</label>
         <input type="date" name="order_date" value="{{ old('order_date', isset($order) ? $order->order_date->format('Y-m-d') : now()->format('Y-m-d')) }}" required
-            class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#3A306F] focus:ring-[#3A306F]">
+            class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#2b2361] focus:ring-[#2b2361]">
         @error('order_date') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
     </div>
 
     <div>
         <label class="mb-1.5 block text-sm font-medium text-gray-700">{{ __('app.field_status') }}</label>
-        <select name="status" required class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#3A306F] focus:ring-[#3A306F]">
+        <select name="status" required class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#2b2361] focus:ring-[#2b2361]">
             @foreach (\App\Models\PurchaseOrder::STATUSES as $status)
                 <option value="{{ $status }}" @selected(old('status', $order->status ?? 'draft') === $status)>{{ __('app.status_'.$status) }}</option>
             @endforeach
@@ -35,14 +35,14 @@
     <div class="sm:col-span-2">
         <label class="mb-1.5 block text-sm font-medium text-gray-700">{{ __('app.field_notes') }}</label>
         <textarea name="notes" rows="2"
-            class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#3A306F] focus:ring-[#3A306F]">{{ old('notes', $order->notes ?? '') }}</textarea>
+            class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#2b2361] focus:ring-[#2b2361]">{{ old('notes', $order->notes ?? '') }}</textarea>
     </div>
 </div>
 
 <div class="mt-8">
     <div class="mb-3 flex items-center justify-between">
         <h3 class="text-sm font-semibold text-gray-700">{{ __('app.line_items') }}</h3>
-        <button type="button" id="add-item" class="rounded-lg border border-[#3A306F] px-3 py-1.5 text-xs font-semibold text-[#3A306F] hover:bg-[#3A306F]/5">+ {{ __('app.add_item') }}</button>
+        <button type="button" id="add-item" class="rounded-lg border border-[#2b2361] px-3 py-1.5 text-xs font-semibold text-[#2b2361] hover:bg-[#2b2361]/5">+ {{ __('app.add_item') }}</button>
     </div>
 
     @error('items') <p class="mb-2 text-xs text-rose-600">{{ $message }}</p> @enderror
@@ -64,7 +64,7 @@
                         <select name="items[{{ $i }}][product_id]" class="item-product w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
                             <option value="">—</option>
                             @foreach ($products as $product)
-                                <option value="{{ $product->id }}" data-price="{{ $product->unit_price }}" @selected($item->product_id == $product->id)>{{ $product->name }} ({{ $product->sku }})</option>
+                                <option value="{{ $product->id }}" data-price="{{ $product->unit_price }}" @selected($item->product_id == $product->id)>{{ $product->name }} ({{ $product->sku }}) — {{ __('app.available_stock', ['quantity' => $product->quantity_on_hand, 'unit' => $product->unit]) }}</option>
                             @endforeach
                         </select>
                     </td>
@@ -93,7 +93,7 @@
             <select name="items[__INDEX__][product_id]" class="item-product w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
                 <option value="">—</option>
                 @foreach ($products as $product)
-                    <option value="{{ $product->id }}" data-price="{{ $product->unit_price }}">{{ $product->name }} ({{ $product->sku }})</option>
+                    <option value="{{ $product->id }}" data-price="{{ $product->unit_price }}">{{ $product->name }} ({{ $product->sku }}) — {{ __('app.available_stock', ['quantity' => $product->quantity_on_hand, 'unit' => $product->unit]) }}</option>
                 @endforeach
             </select>
         </td>
@@ -111,7 +111,7 @@
 </template>
 
 <div class="mt-8 flex gap-3">
-    <button type="submit" class="rounded-lg bg-[#3A306F] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#2f2759]">{{ __('app.save') }}</button>
+    <button type="submit" class="rounded-lg bg-[#2b2361] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#231c4d]">{{ __('app.save') }}</button>
     <a href="{{ route('purchase-orders.index') }}" class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">{{ __('app.cancel') }}</a>
 </div>
 

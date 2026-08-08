@@ -8,6 +8,7 @@ use App\Models\SalesOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class SalesOrderController extends Controller
@@ -40,6 +41,10 @@ class SalesOrderController extends Controller
             ]);
 
             $this->syncItems($order, $validated['items']);
+
+            if (in_array($validated['status'], SalesOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->deductStock($validated['items']);
+            }
         });
 
         return redirect()->route('sales-orders.index')->with('status', __('app.saved'));
@@ -52,7 +57,7 @@ class SalesOrderController extends Controller
         return view('sales-orders.edit', [
             'order' => $salesOrder,
             'customers' => Customer::orderBy('name')->get(),
-            'products' => Product::where('is_active', true)->orderBy('name')->get(),
+            'products' => Product::orderBy('name')->get(),
         ]);
     }
 
@@ -61,6 +66,13 @@ class SalesOrderController extends Controller
         $validated = $this->validated($request);
 
         DB::transaction(function () use ($validated, $salesOrder) {
+            $previousStatus = $salesOrder->status;
+            $previousItems = $salesOrder->items()->get(['product_id', 'quantity'])->toArray();
+
+            if (in_array($previousStatus, SalesOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->restoreStock($previousItems);
+            }
+
             $salesOrder->update([
                 'customer_id' => $validated['customer_id'],
                 'order_date' => $validated['order_date'],
@@ -70,6 +82,10 @@ class SalesOrderController extends Controller
 
             $salesOrder->items()->delete();
             $this->syncItems($salesOrder, $validated['items']);
+
+            if (in_array($validated['status'], SalesOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->deductStock($validated['items']);
+            }
         });
 
         return redirect()->route('sales-orders.index')->with('status', __('app.saved'));
@@ -77,7 +93,13 @@ class SalesOrderController extends Controller
 
     public function destroy(SalesOrder $salesOrder): RedirectResponse
     {
-        $salesOrder->delete();
+        DB::transaction(function () use ($salesOrder) {
+            if (in_array($salesOrder->status, SalesOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->restoreStock($salesOrder->items()->get(['product_id', 'quantity'])->toArray());
+            }
+
+            $salesOrder->delete();
+        });
 
         return redirect()->route('sales-orders.index')->with('status', __('app.deleted'));
     }
@@ -99,6 +121,55 @@ class SalesOrderController extends Controller
         }
 
         $order->update(['total_amount' => $total]);
+    }
+
+    /**
+     * Deduct sold quantities from stock, failing with a validation error if any product
+     * does not have enough quantity on hand. Row-locks each product to stay consistent
+     * under concurrent orders.
+     */
+    private function deductStock(array $items): void
+    {
+        $merged = $this->mergeQuantitiesByProduct($items);
+
+        $products = Product::whereIn('id', array_keys($merged))->lockForUpdate()->get()->keyBy('id');
+
+        foreach ($merged as $productId => $quantity) {
+            $product = $products->get($productId);
+
+            if (! $product || $product->quantity_on_hand < $quantity) {
+                $available = $product->quantity_on_hand ?? 0;
+
+                throw ValidationException::withMessages([
+                    'items' => __('app.insufficient_stock', [
+                        'product' => $product->name ?? $productId,
+                        'available' => $available,
+                    ]),
+                ]);
+            }
+        }
+
+        foreach ($merged as $productId => $quantity) {
+            Product::whereKey($productId)->decrement('quantity_on_hand', $quantity);
+        }
+    }
+
+    private function restoreStock(array $items): void
+    {
+        foreach ($this->mergeQuantitiesByProduct($items) as $productId => $quantity) {
+            Product::whereKey($productId)->increment('quantity_on_hand', $quantity);
+        }
+    }
+
+    private function mergeQuantitiesByProduct(array $items): array
+    {
+        $merged = [];
+
+        foreach ($items as $item) {
+            $merged[$item['product_id']] = ($merged[$item['product_id']] ?? 0) + $item['quantity'];
+        }
+
+        return $merged;
     }
 
     private function validated(Request $request): array

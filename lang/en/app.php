@@ -70,4 +70,7 @@ return [
     'status_received' => 'Received',
     'status_planned' => 'Planned',
     'status_in_progress' => 'In progress',
+
+    'insufficient_stock' => 'Insufficient stock for :product (available: :available).',
+    'available_stock' => ':quantity :unit available',
 ];

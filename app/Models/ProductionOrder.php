@@ -14,6 +14,8 @@ class ProductionOrder extends Model
 
     public const STATUSES = ['planned', 'in_progress', 'completed', 'cancelled'];
 
+    public const STOCK_AFFECTING_STATUSES = ['completed'];
+
     protected $fillable = [
         'order_number',
         'product_id',

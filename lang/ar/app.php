@@ -70,4 +70,7 @@ return [
     'status_received' => 'تم الاستلام',
     'status_planned' => 'مخطط',
     'status_in_progress' => 'قيد التنفيذ',
+
+    'insufficient_stock' => 'الكمية غير كافية للمنتج :product (المتوفر: :available).',
+    'available_stock' => 'متوفر :quantity :unit',
 ];

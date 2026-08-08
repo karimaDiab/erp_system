@@ -14,6 +14,8 @@ class SalesOrder extends Model
 
     public const STATUSES = ['draft', 'confirmed', 'completed', 'cancelled'];
 
+    public const STOCK_AFFECTING_STATUSES = ['confirmed', 'completed'];
+
     protected $fillable = [
         'order_number',
         'customer_id',

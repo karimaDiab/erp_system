@@ -14,6 +14,8 @@ class PurchaseOrder extends Model
 
     public const STATUSES = ['draft', 'ordered', 'received', 'cancelled'];
 
+    public const STOCK_AFFECTING_STATUSES = ['received'];
+
     protected $fillable = [
         'order_number',
         'supplier_id',

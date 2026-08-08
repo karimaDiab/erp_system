@@ -40,6 +40,10 @@ class PurchaseOrderController extends Controller
             ]);
 
             $this->syncItems($order, $validated['items']);
+
+            if (in_array($validated['status'], PurchaseOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->addStock($validated['items']);
+            }
         });
 
         return redirect()->route('purchase-orders.index')->with('status', __('app.saved'));
@@ -52,7 +56,7 @@ class PurchaseOrderController extends Controller
         return view('purchase-orders.edit', [
             'order' => $purchaseOrder,
             'suppliers' => Supplier::orderBy('name')->get(),
-            'products' => Product::where('is_active', true)->orderBy('name')->get(),
+            'products' => Product::orderBy('name')->get(),
         ]);
     }
 
@@ -61,6 +65,13 @@ class PurchaseOrderController extends Controller
         $validated = $this->validated($request);
 
         DB::transaction(function () use ($validated, $purchaseOrder) {
+            $previousStatus = $purchaseOrder->status;
+            $previousItems = $purchaseOrder->items()->get(['product_id', 'quantity'])->toArray();
+
+            if (in_array($previousStatus, PurchaseOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->removeStock($previousItems);
+            }
+
             $purchaseOrder->update([
                 'supplier_id' => $validated['supplier_id'],
                 'order_date' => $validated['order_date'],
@@ -70,6 +81,10 @@ class PurchaseOrderController extends Controller
 
             $purchaseOrder->items()->delete();
             $this->syncItems($purchaseOrder, $validated['items']);
+
+            if (in_array($validated['status'], PurchaseOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->addStock($validated['items']);
+            }
         });
 
         return redirect()->route('purchase-orders.index')->with('status', __('app.saved'));
@@ -77,7 +92,13 @@ class PurchaseOrderController extends Controller
 
     public function destroy(PurchaseOrder $purchaseOrder): RedirectResponse
     {
-        $purchaseOrder->delete();
+        DB::transaction(function () use ($purchaseOrder) {
+            if (in_array($purchaseOrder->status, PurchaseOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->removeStock($purchaseOrder->items()->get(['product_id', 'quantity'])->toArray());
+            }
+
+            $purchaseOrder->delete();
+        });
 
         return redirect()->route('purchase-orders.index')->with('status', __('app.deleted'));
     }
@@ -99,6 +120,34 @@ class PurchaseOrderController extends Controller
         }
 
         $order->update(['total_amount' => $total]);
+    }
+
+    /**
+     * Receiving stock has no upper bound to validate against, unlike selling it.
+     */
+    private function addStock(array $items): void
+    {
+        foreach ($this->mergeQuantitiesByProduct($items) as $productId => $quantity) {
+            Product::whereKey($productId)->increment('quantity_on_hand', $quantity);
+        }
+    }
+
+    private function removeStock(array $items): void
+    {
+        foreach ($this->mergeQuantitiesByProduct($items) as $productId => $quantity) {
+            Product::whereKey($productId)->decrement('quantity_on_hand', $quantity);
+        }
+    }
+
+    private function mergeQuantitiesByProduct(array $items): array
+    {
+        $merged = [];
+
+        foreach ($items as $item) {
+            $merged[$item['product_id']] = ($merged[$item['product_id']] ?? 0) + $item['quantity'];
+        }
+
+        return $merged;
     }
 
     private function validated(Request $request): array

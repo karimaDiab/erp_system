@@ -7,6 +7,7 @@ use App\Models\ProductionOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class ProductionOrderController extends Controller
@@ -40,6 +41,10 @@ class ProductionOrderController extends Controller
             ]);
 
             $this->syncMaterials($order, $validated['materials'] ?? []);
+
+            if (in_array($validated['status'], ProductionOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->applyCompletion($validated['product_id'], $validated['quantity'], $validated['materials'] ?? []);
+            }
         });
 
         return redirect()->route('production-orders.index')->with('status', __('app.saved'));
@@ -51,7 +56,7 @@ class ProductionOrderController extends Controller
 
         return view('production-orders.edit', [
             'order' => $productionOrder,
-            'products' => Product::where('is_active', true)->orderBy('name')->get(),
+            'products' => Product::orderBy('name')->get(),
         ]);
     }
 
@@ -60,6 +65,16 @@ class ProductionOrderController extends Controller
         $validated = $this->validated($request);
 
         DB::transaction(function () use ($validated, $productionOrder) {
+            $wasCompleted = in_array($productionOrder->status, ProductionOrder::STOCK_AFFECTING_STATUSES, true);
+
+            if ($wasCompleted) {
+                $this->reverseCompletion(
+                    $productionOrder->product_id,
+                    $productionOrder->quantity,
+                    $productionOrder->materials()->get(['product_id', 'quantity_required'])->toArray()
+                );
+            }
+
             $productionOrder->update([
                 'product_id' => $validated['product_id'],
                 'quantity' => $validated['quantity'],
@@ -71,6 +86,10 @@ class ProductionOrderController extends Controller
 
             $productionOrder->materials()->delete();
             $this->syncMaterials($productionOrder, $validated['materials'] ?? []);
+
+            if (in_array($validated['status'], ProductionOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->applyCompletion($validated['product_id'], $validated['quantity'], $validated['materials'] ?? []);
+            }
         });
 
         return redirect()->route('production-orders.index')->with('status', __('app.saved'));
@@ -78,7 +97,17 @@ class ProductionOrderController extends Controller
 
     public function destroy(ProductionOrder $productionOrder): RedirectResponse
     {
-        $productionOrder->delete();
+        DB::transaction(function () use ($productionOrder) {
+            if (in_array($productionOrder->status, ProductionOrder::STOCK_AFFECTING_STATUSES, true)) {
+                $this->reverseCompletion(
+                    $productionOrder->product_id,
+                    $productionOrder->quantity,
+                    $productionOrder->materials()->get(['product_id', 'quantity_required'])->toArray()
+                );
+            }
+
+            $productionOrder->delete();
+        });
 
         return redirect()->route('production-orders.index')->with('status', __('app.deleted'));
     }
@@ -91,6 +120,58 @@ class ProductionOrderController extends Controller
                 'quantity_required' => $material['quantity_required'],
             ]);
         }
+    }
+
+    /**
+     * Consume raw materials and add the finished good to stock, failing with a
+     * validation error if any material does not have enough quantity on hand.
+     */
+    private function applyCompletion(int $productId, int $quantity, array $materials): void
+    {
+        $merged = $this->mergeQuantitiesByProduct($materials, 'quantity_required');
+
+        if ($merged !== []) {
+            $stock = Product::whereIn('id', array_keys($merged))->lockForUpdate()->get()->keyBy('id');
+
+            foreach ($merged as $materialProductId => $required) {
+                $material = $stock->get($materialProductId);
+
+                if (! $material || $material->quantity_on_hand < $required) {
+                    throw ValidationException::withMessages([
+                        'materials' => __('app.insufficient_stock', [
+                            'product' => $material->name ?? $materialProductId,
+                            'available' => $material->quantity_on_hand ?? 0,
+                        ]),
+                    ]);
+                }
+            }
+
+            foreach ($merged as $materialProductId => $required) {
+                Product::whereKey($materialProductId)->decrement('quantity_on_hand', $required);
+            }
+        }
+
+        Product::whereKey($productId)->increment('quantity_on_hand', $quantity);
+    }
+
+    private function reverseCompletion(int $productId, int $quantity, array $materials): void
+    {
+        foreach ($this->mergeQuantitiesByProduct($materials, 'quantity_required') as $materialProductId => $required) {
+            Product::whereKey($materialProductId)->increment('quantity_on_hand', $required);
+        }
+
+        Product::whereKey($productId)->decrement('quantity_on_hand', $quantity);
+    }
+
+    private function mergeQuantitiesByProduct(array $materials, string $quantityKey): array
+    {
+        $merged = [];
+
+        foreach ($materials as $material) {
+            $merged[$material['product_id']] = ($merged[$material['product_id']] ?? 0) + $material[$quantityKey];
+        }
+
+        return $merged;
     }
 
     private function validated(Request $request): array

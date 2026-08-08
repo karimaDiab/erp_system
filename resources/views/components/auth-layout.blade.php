@@ -11,7 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        body { font-family: {{ app()->getLocale() === 'ar' ? "'Cairo'" : "'Instrument Sans'" }}, ui-sans-serif, system-ui, sans-serif; }
+        body { font-family: "{{ app()->getLocale() === 'ar' ? "'Cairo'" : "'Instrument Sans'" }}", ui-sans-serif, system-ui, sans-serif; }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-[#2b2361] via-[#352a70] to-[#231c4d] text-white antialiased">
