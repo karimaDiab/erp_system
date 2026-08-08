@@ -73,4 +73,6 @@ return [
 
     'insufficient_stock' => 'الكمية غير كافية للمنتج :product (المتوفر: :available).',
     'available_stock' => 'متوفر :quantity :unit',
+
+    'footer_rights' => '© :year :app. جميع الحقوق محفوظة.',
 ];
