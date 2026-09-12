@@ -13,6 +13,9 @@ return [
     'nav_production' => 'Production',
     'nav_production_orders' => 'Production Orders',
 
+    'menu' => 'Menu',
+    'close' => 'Close',
+
     'view_all' => 'View all',
     'add_new' => 'Add new',
     'actions' => 'Actions',

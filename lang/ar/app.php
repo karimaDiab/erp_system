@@ -13,6 +13,9 @@ return [
     'nav_production' => 'الإنتاج',
     'nav_production_orders' => 'أوامر الإنتاج',
 
+    'menu' => 'القائمة',
+    'close' => 'إغلاق',
+
     'view_all' => 'عرض الكل',
     'add_new' => 'إضافة جديد',
     'actions' => 'إجراءات',

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ isset($title) ? $title.' · ' : '' }}{{ __('auth.app_name') }}</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo/favicon.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo/emblem.svg') }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=cairo:400,500,600,700|instrument-sans:400,500,600"
@@ -30,7 +30,7 @@
         <div class="flex flex-1 flex-col">
             <x-header :title="$title ?? ''" />
 
-            <main class="flex-1 px-8 py-8">
+            <main class="flex-1 px-4 py-6 sm:px-8 sm:py-8">
                 @if (session('status'))
                 <div class="mb-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                     {{ session('status') }}

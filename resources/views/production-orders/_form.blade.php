@@ -61,7 +61,8 @@
         <button type="button" id="add-item" class="rounded-lg border border-[#2b2361] px-3 py-1.5 text-xs font-semibold text-[#2b2361] hover:bg-[#2b2361]/5">+ {{ __('app.add_item') }}</button>
     </div>
 
-    <table class="min-w-full overflow-hidden rounded-lg border border-gray-200 text-sm">
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+    <table class="min-w-full text-sm">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-3 py-2 text-start font-medium text-gray-500">{{ __('app.field_product') }}</th>
@@ -91,6 +92,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 
 <template id="item-row-template">

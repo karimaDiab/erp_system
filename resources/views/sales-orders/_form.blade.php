@@ -47,7 +47,8 @@
 
     @error('items') <p class="mb-2 text-xs text-rose-600">{{ $message }}</p> @enderror
 
-    <table class="min-w-full overflow-hidden rounded-lg border border-gray-200 text-sm">
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+    <table class="min-w-full text-sm">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-3 py-2 text-start font-medium text-gray-500">{{ __('app.field_product') }}</th>
@@ -83,6 +84,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 
     <div class="mt-3 text-end text-sm font-semibold text-gray-700">{{ __('app.field_total') }}: <span id="order-total">0.00</span></div>
 </div>
