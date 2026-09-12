@@ -1,5 +1,5 @@
 <x-app-layout :title="__('app.nav_products')">
-    <div class="mb-6 flex items-center justify-between">
+    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p class="text-sm text-gray-500">{{ __('app.products_intro') }}</p>
         <a href="{{ route('products.create') }}" class="rounded-lg bg-[#2b2361] px-4 py-2 text-sm font-semibold text-white hover:bg-[#231c4d]">
             + {{ __('app.add_new') }}
@@ -7,6 +7,7 @@
     </div>
 
     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 text-sm">
             <thead class="bg-gray-50">
                 <tr>
@@ -46,6 +47,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     <div class="mt-4">{{ $products->links() }}</div>

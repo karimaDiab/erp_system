@@ -75,4 +75,6 @@ return [
     'available_stock' => ':quantity :unit available',
 
     'footer_rights' => '© :year :app. All rights reserved.',
+    'menu' => 'Menu',
+    'close' => 'Close',
 ];

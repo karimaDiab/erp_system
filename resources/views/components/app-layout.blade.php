@@ -24,12 +24,17 @@
 
 <body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
     <div class="flex min-h-screen">
+        <input type="checkbox" id="sidebar-toggle" class="peer hidden">
+
         <x-sidebar />
 
-        <div class="flex flex-1 flex-col">
+        <label for="sidebar-toggle"
+            class="fixed inset-0 z-30 hidden bg-gray-900/50 peer-checked:block lg:hidden" aria-hidden="true"></label>
+
+        <div class="flex min-w-0 flex-1 flex-col">
             <x-header :title="$title ?? ''" />
 
-            <main class="flex-1 px-8 py-8">
+            <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
                 @if (session('status'))
                 <div class="mb-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                     {{ session('status') }}

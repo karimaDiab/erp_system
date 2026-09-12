@@ -47,7 +47,8 @@
 
     @error('items') <p class="mb-2 text-xs text-rose-600">{{ $message }}</p> @enderror
 
-    <table class="min-w-full overflow-hidden rounded-lg border border-gray-200 text-sm">
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+    <table class="min-w-full overflow-hidden text-sm">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-3 py-2 text-start font-medium text-gray-500">{{ __('app.field_product') }}</th>
@@ -61,7 +62,7 @@
             @forelse (($order->items ?? []) as $i => $item)
                 <tr class="item-row">
                     <td class="px-3 py-2">
-                        <select name="items[{{ $i }}][product_id]" class="item-product w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
+                        <select name="items[{{ $i }}][product_id]" class="item-product w-full min-w-[14rem] rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
                             <option value="">—</option>
                             @foreach ($products as $product)
                                 <option value="{{ $product->id }}" data-price="{{ $product->unit_price }}" @selected($item->product_id == $product->id)>{{ $product->name }} ({{ $product->sku }}) — {{ __('app.available_stock', ['quantity' => $product->quantity_on_hand, 'unit' => $product->unit]) }}</option>
@@ -83,6 +84,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 
     <div class="mt-3 text-end text-sm font-semibold text-gray-700">{{ __('app.field_total') }}: <span id="order-total">0.00</span></div>
 </div>
@@ -90,7 +92,7 @@
 <template id="item-row-template">
     <tr class="item-row">
         <td class="px-3 py-2">
-            <select name="items[__INDEX__][product_id]" class="item-product w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
+            <select name="items[__INDEX__][product_id]" class="item-product w-full min-w-[14rem] rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
                 <option value="">—</option>
                 @foreach ($products as $product)
                     <option value="{{ $product->id }}" data-price="{{ $product->unit_price }}">{{ $product->name }} ({{ $product->sku }}) — {{ __('app.available_stock', ['quantity' => $product->quantity_on_hand, 'unit' => $product->unit]) }}</option>

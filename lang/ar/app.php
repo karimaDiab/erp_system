@@ -75,4 +75,6 @@ return [
     'available_stock' => 'متوفر :quantity :unit',
 
     'footer_rights' => '© :year :app. جميع الحقوق محفوظة.',
+    'menu' => 'القائمة',
+    'close' => 'إغلاق',
 ];

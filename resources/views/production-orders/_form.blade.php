@@ -61,7 +61,8 @@
         <button type="button" id="add-item" class="rounded-lg border border-[#2b2361] px-3 py-1.5 text-xs font-semibold text-[#2b2361] hover:bg-[#2b2361]/5">+ {{ __('app.add_item') }}</button>
     </div>
 
-    <table class="min-w-full overflow-hidden rounded-lg border border-gray-200 text-sm">
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+    <table class="min-w-full overflow-hidden text-sm">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-3 py-2 text-start font-medium text-gray-500">{{ __('app.field_product') }}</th>
@@ -73,7 +74,7 @@
             @forelse (($order->materials ?? []) as $i => $material)
                 <tr class="item-row">
                     <td class="px-3 py-2">
-                        <select name="materials[{{ $i }}][product_id]" class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
+                        <select name="materials[{{ $i }}][product_id]" class="w-full min-w-[14rem] rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
                             <option value="">—</option>
                             @foreach ($products as $product)
                                 <option value="{{ $product->id }}" @selected($material->product_id == $product->id)>{{ $product->name }} ({{ $product->sku }}) — {{ __('app.available_stock', ['quantity' => $product->quantity_on_hand, 'unit' => $product->unit]) }}</option>
@@ -91,12 +92,13 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 
 <template id="item-row-template">
     <tr class="item-row">
         <td class="px-3 py-2">
-            <select name="materials[__INDEX__][product_id]" class="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
+            <select name="materials[__INDEX__][product_id]" class="w-full min-w-[14rem] rounded-lg border border-gray-300 px-2 py-1.5 text-sm" required>
                 <option value="">—</option>
                 @foreach ($products as $product)
                     <option value="{{ $product->id }}">{{ $product->name }} ({{ $product->sku }}) — {{ __('app.available_stock', ['quantity' => $product->quantity_on_hand, 'unit' => $product->unit]) }}</option>
